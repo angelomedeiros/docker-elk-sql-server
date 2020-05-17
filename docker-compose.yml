@@ -30,10 +30,6 @@ services:
       - ./logstash/pipeline:/usr/share/logstash/pipeline
       - ./logstash/drivers:/usr/share/logstash/drivers
       - ./logstash/statements:/usr/share/logstash/statements
-    ports:
-      - "5000:5000/tcp"
-      - "5000:5000/udp"
-      - "9600:9600"
     depends_on: 
       - elasticsearch
       - kibana
