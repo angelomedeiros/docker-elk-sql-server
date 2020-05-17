@@ -1,0 +1,41 @@
+version: '3.8'
+
+networks:
+  elk:
+    name: elk
+
+services:
+  elasticsearch: 
+    image: elasticsearch:7.7.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      discovery.type: single-node
+    networks: 
+      - elk
+
+  kibana: 
+      image: kibana:7.7.0
+      ports:
+        - 5601:5601
+      depends_on: 
+        - elasticsearch
+      networks: 
+        - elk
+
+  logstash: 
+    image: logstash:7.7.0
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - ./logstash/drivers:/usr/share/logstash/drivers
+      - ./logstash/statements:/usr/share/logstash/statements
+    ports:
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    depends_on: 
+      - elasticsearch
+      - kibana
+    networks: 
+      - elk
